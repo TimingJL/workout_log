@@ -316,6 +316,97 @@ Under `app/views/layouts/`, we change the `application.html.erb` to `application
 	.container
 		= yield
 ```
+![image](https://github.com/TimingJL/workout_log/blob/master/pic/navbar.jpeg)
+
+# Add The Exercises
+Next, what I wanna do is add the excercises that we did for each workout.        
+What we need to do is create an excercise model.     
+```console
+$ rails g model exercise name:string sets:integer reps:integer workout:references
+$ rake db:migrate
+```
+
+Now, we need to add an association between exercise and workout.        
+In `app/models/workout.rb`
+```ruby
+class Workout < ApplicationRecord
+	has_many :exercises, dependent: destroy
+end
+```
+Note:
+`dependent: destroy` means if you delete a workout, its exercises are deleted as well.
+
+And next, we need to add routes:
+In `config/routes.rb`
+```ruby
+Rails.application.routes.draw do
+	resources :workouts do
+		resources :exercises
+	end
+	root 'workouts#index'
+end
+```
+
+Next, let's generate a controller.           
+```console
+$ rails g controller exercises
+```
+
+In `app/controllers/exercises_controller.rb`
+```ruby
+class ExercisesController < ApplicationController
+	def create
+		@workout = Workout.find(params[:workout_id])
+		@exercise = @workout.exercises.create(params[:exercise].permit(:name, :sets, :reps))
+
+		redirect_to workout_path(@workout)
+	end
+end
+```
+
+Next, we need to create our views for the exercises.        
+Under `app/views/exercises`, we new a file and save as `_exercise_html.haml`. And another one save as `_form.html.haml`.      
+In `app/views/exercises/_form.html.haml`
+```haml
+= simple_form_for([@workout, @workout.exercises.build]) do |f|
+	= f.input :name, input_html: { class: "form-control" }
+	= f.input :sets, input_html: { class: "form-control" }
+	= f.input :reps, input_html: { class: "form-control" }
+	%br/
+	= f.button :submit
+```
+
+In `app/views/exercises/_exercise_html.haml`
+```haml
+%p= exercise.name
+%p= exercise.sets
+%p= exercise.reps
+```
+
+
+In `app/views/workouts/show.html.haml`
+```haml
+#workout
+	%p= @workout.date
+	%p= @workout.workout
+	%p= @workout.mood
+	%p= @workout.length
+
+#exercises
+	%h2 Exercises
+	= render @workout.exercises
+
+	%h3 Add an exercise
+	= render "exercises/form"
+
+= link_to "Back", root_path
+= link_to "Edit", edit_workout_path(@workout)
+= link_to "Delete", workout_path(@workout), method: :delete, data: { confirm: "Are you sure?" }
+```
+![image](https://github.com/TimingJL/workout_log/blob/master/pic/exercise_form.jpeg)
+
+
+
 
 
 
