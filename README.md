@@ -291,7 +291,31 @@ Then back in our `app/views/workouts/show.html.haml`
 = link_to "Delete", workout_path(@workout), method: :delete, data: { confirm: "Are you sure?" }
 ```
 
+# Structure And Styling
+http://getbootstrap.com/css/       
 
+
+### Navbar
+Under `app/views/layouts/`, we change the `application.html.erb` to `application.html.haml`.
+```haml
+!!!
+%html
+%head
+	%title Workout Log Application
+	= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
+	= javascript_include_tag 'application', 'data-turbolinks-track' => true
+	= csrf_meta_tags
+%body
+	%nav.navbar.navbar-default
+		.container
+			.navbar-header
+				= link_to "Workout Log", root_path, class: "navbar-brand"
+			.nav.navbar-nav.navbar-right
+				= link_to "New Workout", new_workout_path, class: "navbar navbar-link"
+
+	.container
+		= yield
+```
 
 
 
