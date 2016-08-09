@@ -198,7 +198,7 @@ In `app/views/workouts`,we also create an another new file and save it as `_form
 	%br/
 	= f.button :submit
 ```
-![image](https://github.com/TimingJL/workout_log/blob/master/pic/new_job.jpeg)
+![image](https://github.com/TimingJL/workout_log/blob/master/pic/new_workout.jpeg)
 
 
 In `app/views/workouts`,we create a new file and save it as `show.html.haml`.
@@ -211,10 +211,23 @@ In `app/views/workouts`,we create a new file and save it as `show.html.haml`.
 ```
 
 
+# List Out All Of Workouts
 
+Next thing we wanna do is if we go to `http://localhost:3000/`, we want to list out all the workouts.           
+In `app/views/workouts/index.html.haml`
+```haml
+- @workouts.each do |workout|
+	%h2= link_to workout.date, workout
+	%h3= workout.workout
+```
 
-
-
+And in our controller `app/controllers/workouts_controller.rb`
+```ruby
+def index
+	@workouts = Workout.all.order("created_at DESC")
+end
+```
+![image](https://github.com/TimingJL/workout_log/blob/master/pic/list_out.jpeg)
 
 
 To be continued...
