@@ -230,4 +230,71 @@ end
 ![image](https://github.com/TimingJL/workout_log/blob/master/pic/list_out.jpeg)
 
 
+# Update And Destroy Workouts
+Let's next add the ability to update and destroy workouts.
+
+
+### Update/Edit
+In `app/controllers/workouts_controller.rb`
+```ruby
+def update
+	if @workout.update(workout_params)
+		redirect_to @workout
+	else
+		render 'edit'
+	end
+end
+```
+
+And in our `app/views/workouts/show.html.haml`
+```haml
+#workout
+	%p= @workout.date
+	%p= @workout.workout
+	%p= @workout.mood
+	%p= @workout.length
+
+= link_to "Back", root_path |
+= link_to "Edit", edit_workout_path(@workout)
+```
+
+In `app/views/workouts/`, we're going to create a new file and save it as `edit.html.haml`
+```haml
+%h1 Edit Workout
+
+= render 'form'
+
+= link_to "Cancel", root_path
+```
+![image](https://github.com/TimingJL/workout_log/blob/master/pic/edit_workout.jpeg)
+
+
+### Delete
+In `app/controllers/workouts_controller.rb`
+```ruby
+def destroy
+	@workout.destroy
+	redirect_to root_path
+end
+```
+
+Then back in our `app/views/workouts/show.html.haml`
+```haml
+#workout
+	%p= @workout.date
+	%p= @workout.workout
+	%p= @workout.mood
+	%p= @workout.length
+
+= link_to "Back", root_path
+= link_to "Edit", edit_workout_path(@workout)
+= link_to "Delete", workout_path(@workout), method: :delete, data: { confirm: "Are you sure?" }
+```
+
+
+
+
+
+
+
 To be continued...
