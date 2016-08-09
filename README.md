@@ -330,7 +330,7 @@ Now, we need to add an association between exercise and workout.
 In `app/models/workout.rb`
 ```ruby
 class Workout < ApplicationRecord
-	has_many :exercises, dependent: destroy
+	has_many :exercises, dependent: :destroy
 end
 ```
 Note:
@@ -404,6 +404,19 @@ In `app/views/workouts/show.html.haml`
 = link_to "Delete", workout_path(@workout), method: :delete, data: { confirm: "Are you sure?" }
 ```
 ![image](https://github.com/TimingJL/workout_log/blob/master/pic/exercise_form.jpeg)
+
+
+Let's go back to our `app/views/workouts/index.html.haml`
+```haml
+#index_workouts
+	- @workouts.each do |workout|
+		%h2= link_to workout.date.strftime("%A %B %d"), workout
+		%h3
+			%span Workout:
+			= workout.workout
+```
+
+
 
 
 
