@@ -68,6 +68,153 @@ class WorkoutsController < ApplicationController
 end
 ```
 
+Before we create the index view, we wanna to add some rubygems.       
+Open up the `Gemfile`
+```
+gem 'simple_form', github: 'kesha-antonov/simple_form', branch: 'rails-5-0'
+gem 'haml', '~> 4.0.5'
+gem 'bootstrap-sass', '~> 3.2.0.2'
+```
+Go back to our terminal. Run `bundle install` and restart our server.
+
+#### Bootstrap
+https://github.com/twbs/bootstrap-sass          
+
+To use bootstrap-sass, first we need to rename `application.css` to `application.css.scss` in `app/assets/stylesheets/`.       
+And then import Bootstrap in `app/assets/stylesheets/application.css.scss`:
+```scss
+@import "bootstrap-mincer";
+@import "bootstrap";
+```
+Note:        
+File to import not found or unreadable: 
+bootstrap-sprockets Only for Twitter Bootstrap 3, bootstrap-sprockets is used.
+
+
+Then in `app/assets/javascripts/application.js`, we import `//= require bootstrap-sprockets` under `//= require jquery` like:
+```js
+//= require jquery
+//= require jquery_ujs
+//= require bootstrap-sprockets
+//= require turbolinks
+//= require_tree .
+```
+
+#### Simple Form
+https://github.com/plataformatec/simple_form        
+
+In our terminal, we need to run the generator.     
+Simple Form can be easily integrated to the Bootstrap. To do that you have to use the bootstrap option in the install generator, like this:
+```console
+rails generate simple_form:install --bootstrap
+```
+
+
+```
+===============================================================================
+  Be sure to have a copy of the Bootstrap stylesheet available on your
+  application, you can get it on http://getbootstrap.com/.
+
+  Inside your views, use the 'simple_form_for' with one of the Bootstrap form
+  classes, '.form-horizontal' or '.form-inline', as the following:
+
+    = simple_form_for(@user, html: { class: 'form-horizontal' }) do |form|
+===============================================================================
+```
+
+
+
+In `app/views/workouts`, we create a new file and save it as `index.html.haml`
+```haml
+%h1 This is the Workouts#Index placeholder
+```
+
+
+
+# Ability To Create A Workout
+We next need the ability to create a workout.       
+So, we're going to define a few actions in `app/controllers/workouts_controller.rb`
+```ruby
+class WorkoutsController < ApplicationController
+	before_action :find_workout, only: [:show, :edit, :update, :destroy]
+	def index
+	end
+
+	def show
+	end
+
+	def new
+		@workout = Workout.new
+	end
+
+	def create
+		@workout = Workout.new(workout_params)
+		if @workout.save
+			redirect_to @workout
+		else
+			render 'new'
+		end
+	end
+
+	def edit
+	end
+
+	def update
+	end
+
+	def destroy
+	end
+
+	private
+
+	def workout_params
+		params.require(:workout).permit(:date, :workout, :mood, :length)
+	end
+
+	def find_workout
+		@workout = Workout.find(params[:id])
+	end
+end
+```
+
+
+In `app/views/workouts`,we create a new file and save it as `new.html.haml`.
+```haml
+%h1 New Workout
+
+= render 'form'
+
+= link_to "Cancel", root_path
+```
+
+
+In `app/views/workouts`,we also create an another new file and save it as `_form.html.haml`.
+```haml
+= simple_form_for(@workout, html: { class: 'form-horizontal' }) do |f|
+	= f.input :date, label: "Date"
+	= f.input :workout, label: "What area did you workout?", input_html: { class: "form-control" }
+	= f.input :mood, label: "How were you feeling?", input_html: { class: "form-control" }
+	= f.input :length, label: "How long was the workout?", input_html: { class: "form-control" }
+	%br/
+	= f.button :submit
+```
+![image](https://github.com/TimingJL/workout_log/blob/master/pic/new_job.jpeg)
+
+
+In `app/views/workouts`,we create a new file and save it as `show.html.haml`.
+```haml
+#workout
+	%p= @workout.date
+	%p= @workout.workout
+	%p= @workout.mood
+	%p= @workout.length
+```
+
+
+
+
+
+
 
 
 To be continued...
