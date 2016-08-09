@@ -44,4 +44,30 @@ $ rails g model workout date:datetime workout:string mood:string length:string
 $ rake db:migrate
 ```
 
+
+### Create our workout controller
+```console
+$ rails g controller workouts
+```
+
+
+Then we want to add an index and we want the ability to create workout as well as edit and delete.      
+In `config/routes.rb`
+```ruby
+Rails.application.routes.draw do
+	resources :workouts
+	root 'workouts#index'
+end
+```
+
+In `app/controllers/workouts_controller.rb`
+```ruby
+class WorkoutsController < ApplicationController
+	def index
+	end
+end
+```
+
+
+
 To be continued...
